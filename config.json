@@ -1,0 +1,25 @@
+{
+  "remoteCfg": {
+    "host": "hub.browserstack.com",
+    "port": 80
+  },
+  "credentials": {
+    "user": "***",
+    "key": "***"
+  },
+  "browsers": [
+    {
+      "os": "windows",
+      "os_version": "7",
+      "browserName": "chrome",
+      "browser_version": "55"
+    },
+    {
+      "os": "windows",
+      "os_version": "7",
+      "browserName": "firefox",
+      "browser_version": "38"
+    }
+  ],
+  "concurrency": 2
+}
