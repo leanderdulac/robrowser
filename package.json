@@ -6,6 +6,9 @@
   "directories": {
     "src": "src"
   },
+  "scripts": {
+    "lint": "eslint src/**/*.js"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/pagarme/browserstack-automated.git"
@@ -16,7 +19,11 @@
     "url": "https://github.com/pagarme/browserstack-automated/issues"
   },
   "homepage": "https://github.com/pagarme/browserstack-automated#readme",
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "4.13.1",
+    "eslint-config-pagarme-base": "2.0.0",
+    "eslint-plugin-import": "^2.8.0"
+  },
   "dependencies": {
     "async": "2.6.0",
     "ramda": "0.25.0",
