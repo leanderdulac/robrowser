@@ -1,35 +1,55 @@
-var http = require('http'),
-  https = require('https');
+const {
+  set,
+  lensProp,
+  ifElse,
+  propEq,
+  and,
+} = require('ramda')
+const http = require('http')
+const https = require('https')
 
-var keepAliveTimeout = 30 * 1000;
+const keepAliveTimeout = 30 * 1000
 
-if (http.globalAgent && http.globalAgent.hasOwnProperty('keepAlive')) {
-  http.globalAgent.keepAlive = true;
-  https.globalAgent.keepAlive = true;
-  http.globalAgent.keepAliveMsecs = keepAliveTimeout;
-  https.globalAgent.keepAliveMsecs = keepAliveTimeout;
+const generateAgent = () => new http.Agent({
+  keepAlive: true,
+  keepAliveMsecs: keepAliveTimeout,
+})
+
+const generateSecureAgent = () => new https.Agent({
+  keepAlive: true,
+  keepAliveMsecs: keepAliveTimeout,
+})
+
+const generateHttpRequest = () => http.request
+const generateHttpsRequest = () => https.request
+const isHttps = propEq('protocal', 'https:')
+const getAgent = ifElse(
+  isHttps,
+  generateAgent,
+  generateSecureAgent
+)
+const getRequest = ifElse(
+  isHttps,
+  generateHttpsRequest,
+  generateHttpRequest
+)
+const hasAgentAndKeepAlive = ({ globalAgent }) => and(
+  globalAgent,
+  Object.prototype.hasOwnProperty.call(globalAgent, 'keepAlive')
+)
+
+if (hasAgentAndKeepAlive(http)) {
+  http.globalAgent.keepAlive = true
+  https.globalAgent.keepAlive = true
+  http.globalAgent.keepAliveMsecs = keepAliveTimeout
+  https.globalAgent.keepAliveMsecs = keepAliveTimeout
 } else {
-  var agent = new http.Agent({
-    keepAlive: true,
-    keepAliveMsecs: keepAliveTimeout
-  });
+  const setAgent = (options, agent) => set(lensProp('agent'), agent, options)
 
-  var secureAgent = new https.Agent({
-    keepAlive: true,
-    keepAliveMsecs: keepAliveTimeout
-  });
-
-  var httpRequest = http.request;
-  var httpsRequest = https.request;
-
-  http.request = function (options, callback) {
-    if (options.protocol == "https:") {
-      options["agent"] = secureAgent;
-      return httpsRequest(options, callback);
-    }
-    else {
-      options["agent"] = agent;
-      return httpRequest(options, callback);
-    }
-  };
+  http.request = (options, callback) => {
+    const agent = getAgent(options)
+    const request = getRequest(options)
+    const newOptions = setAgent(options, agent)
+    return request(newOptions, callback)
+  }
 }

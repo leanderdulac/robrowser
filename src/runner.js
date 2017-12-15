@@ -1,7 +1,7 @@
 const async = require('async')
 const browse = require('./browse')
 
-function launchTest(opt, cb) {
+function launchTest (opt, cb) {
   browse(opt.url, opt.desired, opt.remoteCfg, (err, browser) => {
     opt.exec(browser, (errExec) => {
       const context = {
@@ -14,8 +14,7 @@ function launchTest(opt, cb) {
   })
 }
 
-module.exports = function seleniumRunner(opt, tests, testCb, endCb) {
-
+module.exports = function seleniumRunner (opt, tests, testCb, endCb) {
   const queue = async.queue(launchTest, opt.concurrency)
   const launchTestsForDesiredBrowser = (desired, cb) => {
     tests.forEach((test) => {

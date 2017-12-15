@@ -1,17 +1,23 @@
 const wd = require('wd')
 const async = require('async')
 
-const wait4 = ms => wait.bind(null, ms)
-
 const wait = (ms, cb) => setTimeout(cb, ms)
+const wait4 = ms => wait.bind(null, ms)
+const isFunction = config => (typeof config === 'function')
 
-module.exports = (url, desired, remoteCfg, cb) => {
-  if (typeof remoteCfg === 'function') {
-    cb = remoteCfg
-    remoteCfg = undefined
+module.exports = (url, desired, remoteConfig, cb) => {
+  let config
+  let callback
+
+  if (isFunction(remoteConfig)) {
+    callback = remoteConfig
+    config = undefined
+  } else {
+    config = remoteConfig
+    callback = cb
   }
-  
-  const browser = wd.remote(remoteCfg)
+
+  const browser = wd.remote(config)
 
   async.series([
     browser.init.bind(browser, desired),
@@ -19,6 +25,6 @@ module.exports = (url, desired, remoteCfg, cb) => {
     browser.get.bind(browser, url),
     wait4(1000),
   ], (err) => {
-    cb(err, browser)
+    callback(err, browser)
   })
 }

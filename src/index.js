@@ -12,7 +12,7 @@ const {
 } = require('ramda')
 
 const specCredentials = applySpec({
-  'browserstack.user': path(['credentials','user']),
+  'browserstack.user': path(['credentials', 'user']),
   'browserstack.key': path(['credentials', 'key']),
 })
 
@@ -20,20 +20,20 @@ const addCredentialsEachBrowser = (config, credentials) => pipe(
   prop('browsers'),
   map(merge(credentials)),
   objOf('browsers'),
-  merge(config),
+  merge(config)
 )(config)
 
-const defaultEndCall = defaultTo(
-  (err, context) => {
-    console.log('All tests ended')
-  }
-)
+const endCall = () => {
+  console.log('All tests ended')
+}
 
-const defaultTestCall = defaultTo(
-  (err) => {
-    console.log('A test finished')
-  }
-)
+const testCall = () => {
+  console.log('A test finished')
+}
+
+const defaultEndCall = defaultTo(endCall)
+
+const defaultTestCall = defaultTo(testCall)
 
 const automated = (tests, config, testCallback, endCallback) => {
   const credentials = specCredentials(config)
@@ -41,7 +41,7 @@ const automated = (tests, config, testCallback, endCallback) => {
   runner(
     configWithCredentials,
     tests,
-    defaultTestCall(testCallback),
+    defaultTestCall(testCall),
     defaultEndCall(endCallback)
   )
 }
