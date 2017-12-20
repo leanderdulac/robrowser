@@ -1,6 +1,20 @@
-const automated = require('./src')
-const test = require('./tests/sample.js')
+const automated = require('./dist')
 const config = require('./config.json')
+
+const test = module.exports = (browser, next) => {
+  browser.title((err, title) => {
+    console.log(`Title for the page: ${title}`)
+    browser.elementByName('q', (err, el) => {
+      el.sendKeys('BrowserStack', () => {
+        browser.elementByName('btnG', (err, el) => {
+          el.click(() => {
+            next(null)
+          })
+        })
+      })
+    })
+  })
+}
 
 const tests = [
   {
