@@ -30,4 +30,9 @@ module.exports = {
   plugins: [
     new UglifyJSPlugin(),
   ],
+  externals: {
+    async: 'async',
+    ramda: 'ramda',
+    wd: 'wd',
+  },
 }
