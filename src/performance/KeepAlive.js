@@ -1,3 +1,11 @@
+/*
+* KeepAlive.js
+* This file causes as http and http connections to remain
+* active even after receiving a response, with the maximum
+* duration of 30 seconds which is the maximum time of a
+* test in the browserstack. Prevents selenium from creating
+* multiple connections per test.
+*/
 import {
   set,
   lensProp,
