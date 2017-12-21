@@ -1,13 +1,9 @@
-module.exports = (browser, next) => {
-  browser.title((err, title) => {
-    browser.elementByName('q', (err, el) => {
-      el.sendKeys('BrowserStack', () => {
-        browser.elementByName('btnG', (err, el) => {
-          el.click(() => {
-            next(null)
-          })
-        })
-      })
-    })
-  })
+module.exports = (browser, callback) => {
+  browser
+    .waitForElementByName('q', 5000)
+    .sendKeys('BrowserStack')
+    .waitForElementByClassName('lsb', 5000)
+    .click()
+    .fin(callback)
+    .done()
 }

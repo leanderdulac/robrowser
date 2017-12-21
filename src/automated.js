@@ -5,36 +5,26 @@ import {
   merge,
   prop,
   pipe,
-  applySpec,
   objOf,
-  path,
 } from 'ramda'
-import nodePath from 'path'
+import path from 'path'
 import fs from 'fs'
+import browserstack from 'browserstack-local'
 import { rootPath } from 'get-root-path'
 import ora from 'ora'
 import './fast-selenium'
 import runner from './runner'
 
-const specCredentials = applySpec({
-  'browserstack.user': path(['credentials', 'user']),
-  'browserstack.key': path(['credentials', 'key']),
-})
-
 const loadTests = (browser) => {
   const { test } = browser
-  const testPath = nodePath.join(rootPath, test)
+  const testPath = path.join(rootPath, test)
   const testFunc = fs.readFileSync(testPath)
 
   return Object.assign(browser, { test: eval(testFunc.toString()) })
 }
 
-const prepareConfigs = (
-  configs,
-  credentials
-) => pipe(
+const prepareConfigs = configs => pipe(
   prop('browsers'),
-  map(merge(credentials)),
   map(loadTests),
   objOf('browsers'),
   merge(configs)
@@ -46,28 +36,46 @@ const automated = (configs, isLocal, run = runner) => {
   const spinner = ora('Loading tests').start()
   spinner.color = 'green'
   const testTotalCount = browsers.length
-  const credentials = specCredentials(configs)
-  const newConfigs = prepareConfigs(configs, credentials)
+  const newConfigs = prepareConfigs(configs)
+  const browserstackLocal = new browserstack.Local()
 
   const endTest = () => {
     spinner.text = `Completed ${testFinished++} of ${testTotalCount} with concurrency ${concurrency}`
   }
 
-  const endAllTests = () => { spinner.stop() }
+  const endAllTests = () => {
+    if (browserstackLocal.isRunning()) {
+      browserstackLocal.stop()
+    }
+    spinner.stop()
+  }
 
-  endTest()
+  if (isLocal) {
+    spinner.text = 'Up Browserstack local binary'
+    browserstackLocal.start({
+      key: configs.credentials.key,
+    }, () => {
+      endTest()
+      run(
+        newConfigs,
+        endTest,
+        endAllTests
+      )
+    })
+  } else {
+    endTest()
 
-  run(
-    newConfigs,
-    endTest,
-    endAllTests
-  )
+    run(
+      newConfigs,
+      endTest,
+      endAllTests
+    )
+  }
 }
 
 export {
   automated,
   prepareConfigs,
-  specCredentials,
 }
 
 export default automated

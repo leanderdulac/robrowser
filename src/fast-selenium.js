@@ -1,12 +1,12 @@
-const {
+import {
   set,
   lensProp,
   ifElse,
   propEq,
   and,
-} = require('ramda')
-const http = require('http')
-const https = require('https')
+} from 'ramda'
+import http from 'http'
+import https from 'https'
 
 const keepAliveTimeout = 30 * 1000
 

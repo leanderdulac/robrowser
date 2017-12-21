@@ -11,9 +11,11 @@ function loadJSON (filePath) {
 }
 
 function hasLocal (args) {
-  return args.find(function (argument) {
+  const local = args.find(function (argument) {
     return argument === '--local';
-  });
+  })
+
+  return local ? true : false
 }
 
 var configsPath = path.join(rootPath, './.browserstack');

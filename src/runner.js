@@ -1,26 +1,23 @@
-/* eslint no-param-reassign: ["error", { "props": false }] */
+/* eslint no-param-reassign: "warn" */
 import async from 'async'
-import connect from './connect'
+import wd from 'wd'
 
 const worker = (
   {
     browser,
     remote,
   },
-  callback,
-  openConnection = connect
+  callback
 ) => {
   const { url, test } = browser
 
-  openConnection(url, browser, remote, (err, navigator) => {
-    test(navigator, () => {
-      const context = {
-        url,
-        browser,
-      }
+  const navigator = wd.remote(remote, 'promiseChain')
+  const promise = navigator.init(browser)
+    .setAsyncScriptTimeout(30000)
+    .get(url)
 
-      navigator.quit(() => callback(context))
-    })
+  test(promise, () => {
+    navigator.quit(callback)
   })
 }
 
