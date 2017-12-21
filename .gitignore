@@ -1,6 +1,9 @@
 # Build
 /dist
 
+# Browserstack
+browserstack.err
+
 # Logs
 logs
 *.log
