@@ -4,60 +4,37 @@ import {
 } from 'sinon'
 import {
   automated,
-  specCredentials,
   prepareConfigs,
 } from './../src/automated'
 
-const user = 'Luke Skywalker'
-const key = '4f0rça3st3j4c0mv0c³'
-const credentials = {
-  user,
-  key,
-}
-const browserStackUserKey = 'browserstack.user'
-const browserStackKeyName = 'browserstack.key'
-const browsers = [
-  {
-    os: 'windows',
-    os_version: 7,
-    browserName: 'chrome',
-    browser_version: 55,
-    url: 'http://www.google.com',
-    test: './index.js',
-  },
-  {
-    os: 'windows',
-    os_version: 10,
-    browserName: 'chrome',
-    browser_version: 45,
-    url: 'http://www.google.com',
-    test: './index.js',
-  },
-]
-
-test('should replace credentials keys', (t) => {
-  const config = {
-    credentials,
-  }
-
-  const newCredentials = specCredentials(config)
-
-  t.deepEqual(newCredentials[browserStackUserKey], user)
-  t.deepEqual(newCredentials[browserStackKeyName], key)
-})
-
 test('should prepare config', (t) => {
   const config = {
-    browsers,
+    browsers: [
+      {
+        os: 'windows',
+        os_version: 7,
+        browserName: 'chrome',
+        browser_version: 55,
+        url: 'http://www.google.com',
+        test: './index.js',
+      },
+      {
+        os: 'windows',
+        os_version: 10,
+        browserName: 'chrome',
+        browser_version: 45,
+        url: 'http://www.google.com',
+        test: './index.js',
+      },
+    ],
   }
 
-  const newConfig = prepareConfigs(config, credentials)
+  const newConfig = prepareConfigs(config)
 
   const [firstBrowser, secondBrowser] = newConfig.browsers
-  t.deepEqual(firstBrowser.user, user)
-  t.deepEqual(firstBrowser.key, key)
-  t.deepEqual(secondBrowser.user, user)
-  t.deepEqual(secondBrowser.key, key)
+
+  t.is(typeof firstBrowser.test, 'function')
+  t.is(typeof secondBrowser.test, 'function')
 })
 
 test('should call runner with expected parameters', (t) => {
@@ -66,14 +43,30 @@ test('should call runner with expected parameters', (t) => {
       host: 'hub.browserstack.com',
       port: 80,
     },
-    credentials,
-    browsers,
+    browsers: [
+      {
+        os: 'windows',
+        os_version: 7,
+        browserName: 'chrome',
+        browser_version: 55,
+        url: 'http://www.google.com',
+        test: './index.js',
+      },
+      {
+        os: 'windows',
+        os_version: 10,
+        browserName: 'chrome',
+        browser_version: 45,
+        url: 'http://www.google.com',
+        test: './index.js',
+      },
+    ],
     concurrency: 2,
   }
 
   const runner = spy()
 
-  automated(config, true, runner)
+  automated(config, false, runner)
 
   t.is(runner.calledOnce, true)
 })
