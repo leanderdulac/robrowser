@@ -1,5 +1,4 @@
 const path = require('path')
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin')
 
 module.exports = {
   context: path.join(__dirname, 'src'),
@@ -27,12 +26,12 @@ module.exports = {
       },
     ],
   },
-  plugins: [
-    new UglifyJSPlugin(),
-  ],
   externals: {
     async: 'async',
     ramda: 'ramda',
     wd: 'wd',
+    'get-root-path': 'get-root-path',
+    ora: 'ora',
+    'browserstack-local': 'browserstack-local',
   },
 }
