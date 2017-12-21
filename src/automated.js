@@ -1,3 +1,5 @@
+/* eslint no-eval: "warn" */
+/* eslint no-plusplus: "warn" */
 import {
   map,
   merge,
@@ -6,8 +8,11 @@ import {
   applySpec,
   objOf,
   path,
-  defaultTo,
 } from 'ramda'
+import nodePath from 'path'
+import fs from 'fs'
+import { rootPath } from 'get-root-path'
+import ora from 'ora'
 import './fast-selenium'
 import runner from './runner'
 
@@ -16,39 +21,52 @@ const specCredentials = applySpec({
   'browserstack.key': path(['credentials', 'key']),
 })
 
-const addCredentialsEachBrowser = (config, credentials) => pipe(
+const loadTests = (browser) => {
+  const { test } = browser
+  const testPath = nodePath.join(rootPath, test)
+  const testFunc = fs.readFileSync(testPath)
+
+  return Object.assign(browser, { test: eval(testFunc.toString()) })
+}
+
+const prepareConfigs = (
+  configs,
+  credentials
+) => pipe(
   prop('browsers'),
   map(merge(credentials)),
+  map(loadTests),
   objOf('browsers'),
-  merge(config)
-)(config)
+  merge(configs)
+)(configs)
 
-const endCall = () => {
-  console.log('All tests ended')
-}
+const automated = (configs, isLocal, run = runner) => {
+  const { browsers, concurrency } = configs
+  let testFinished = 0
+  const spinner = ora('Loading tests').start()
+  spinner.color = 'green'
+  const testTotalCount = browsers.length
+  const credentials = specCredentials(configs)
+  const newConfigs = prepareConfigs(configs, credentials)
 
-const testCall = () => {
-  console.log('A test finished')
-}
+  const endTest = () => {
+    spinner.text = `Completed ${testFinished++} of ${testTotalCount} with concurrency ${concurrency}`
+  }
 
-const defaultEndCall = defaultTo(endCall)
+  const endAllTests = () => { spinner.stop() }
 
-const defaultTestCall = defaultTo(testCall)
+  endTest()
 
-const automated = (tests, config, testCallback, endCallback, run = runner) => {
-  const credentials = specCredentials(config)
-  const configWithCredentials = addCredentialsEachBrowser(config, credentials)
   run(
-    configWithCredentials,
-    tests,
-    defaultTestCall(testCall),
-    defaultEndCall(endCallback)
+    newConfigs,
+    endTest,
+    endAllTests
   )
 }
 
 export {
   automated,
-  addCredentialsEachBrowser,
+  prepareConfigs,
   specCredentials,
 }
 

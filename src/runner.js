@@ -1,33 +1,63 @@
-const async = require('async')
-const browse = require('./browse')
+/* eslint no-param-reassign: ["error", { "props": false }] */
+import async from 'async'
+import connect from './connect'
 
-function launchTest (opt, cb) {
-  browse(opt.url, opt.desired, opt.remoteCfg, (err, browser) => {
-    opt.exec(browser, (errExec) => {
+const worker = (
+  {
+    browser,
+    remote,
+  },
+  callback,
+  openConnection = connect
+) => {
+  const { url, test } = browser
+
+  openConnection(url, browser, remote, (err, navigator) => {
+    test(navigator, () => {
       const context = {
-        url: opt.url,
-        browser: opt.desired,
+        url,
+        browser,
       }
 
-      browser.quit(() => cb(errExec, context))
+      navigator.quit(() => callback(context))
     })
   })
 }
 
-module.exports = function seleniumRunner (opt, tests, testCb, endCb) {
-  const queue = async.queue(launchTest, opt.concurrency)
-  const launchTestsForDesiredBrowser = (desired, cb) => {
-    tests.forEach((test) => {
-      const task = {
-        url: test.url,
-        desired,
-        remoteCfg: opt.remoteCfg,
-        exec: test.exec,
-      }
-      queue.push(task, testCb)
-    })
-    queue.drain = cb
+const browsersIteratorGenerator = (
+  { remote },
+  queue,
+  testCallback
+) => (browser) => {
+  const task = {
+    browser,
+    remote,
   }
-
-  async.forEach(opt.browsers, launchTestsForDesiredBrowser, endCb)
+  queue.push(task, testCallback)
 }
+
+const runner = (
+  config,
+  testCallback,
+  endCallback,
+  launchTest = worker,
+  browsersIterator = browsersIteratorGenerator
+) => {
+  const { browsers, concurrency } = config
+  const queue = async.queue(launchTest, concurrency)
+  queue.drain = endCallback
+  const iterator = browsersIterator(
+    config,
+    queue,
+    testCallback
+  )
+
+  async.forEach(browsers, iterator)
+}
+
+export {
+  worker,
+  browsersIteratorGenerator,
+}
+
+export default runner

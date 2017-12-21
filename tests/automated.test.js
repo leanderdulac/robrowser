@@ -3,9 +3,9 @@ import {
   spy,
 } from 'sinon'
 import {
-  specCredentials,
-  addCredentialsEachBrowser,
   automated,
+  specCredentials,
+  prepareConfigs,
 } from './../src/automated'
 
 const user = 'Luke Skywalker'
@@ -22,12 +22,16 @@ const browsers = [
     os_version: 7,
     browserName: 'chrome',
     browser_version: 55,
+    url: 'http://www.google.com',
+    test: './index.js',
   },
   {
     os: 'windows',
-    os_version: 7,
-    browserName: 'firefox',
-    browser_version: 38,
+    os_version: 10,
+    browserName: 'chrome',
+    browser_version: 45,
+    url: 'http://www.google.com',
+    test: './index.js',
   },
 ]
 
@@ -42,12 +46,12 @@ test('should replace credentials keys', (t) => {
   t.deepEqual(newCredentials[browserStackKeyName], key)
 })
 
-test('should add credentials each browser', (t) => {
+test('should prepare config', (t) => {
   const config = {
     browsers,
   }
 
-  const newConfig = addCredentialsEachBrowser(config, credentials)
+  const newConfig = prepareConfigs(config, credentials)
 
   const [firstBrowser, secondBrowser] = newConfig.browsers
   t.deepEqual(firstBrowser.user, user)
@@ -58,7 +62,7 @@ test('should add credentials each browser', (t) => {
 
 test('should call runner with expected parameters', (t) => {
   const config = {
-    remoteCfg: {
+    remote: {
       host: 'hub.browserstack.com',
       port: 80,
     },
@@ -66,18 +70,10 @@ test('should call runner with expected parameters', (t) => {
     browsers,
     concurrency: 2,
   }
-  const tests = [
-    {
-      url: 'http://www.google.com',
-      exec: test,
-    },
-  ]
 
-  const testCallback = spy()
-  const finishTestsCallback = spy()
   const runner = spy()
 
-  automated(tests, config, testCallback, finishTestsCallback, runner)
+  automated(config, true, runner)
 
   t.is(runner.calledOnce, true)
 })
