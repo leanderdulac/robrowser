@@ -53,11 +53,11 @@ const automated = (configs, isLocal, run = runner) => {
   if (isLocal) {
     spinner.text = 'Up Browserstack local binary'
     browserstackLocal.start({
-      key: configs.credentials.key,
+      key: configs.remote.pwd,
     }, () => {
       endTest()
       run(
-        newConfigs,
+        merge(newConfigs, { isLocal }),
         endTest,
         endAllTests
       )

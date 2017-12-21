@@ -6,10 +6,15 @@ const worker = (
   {
     browser,
     remote,
+    isLocal,
   },
   callback
 ) => {
   const { url, test } = browser
+
+  if (isLocal) {
+    browser['browserstack.local'] = 'true'
+  }
 
   const navigator = wd.remote(remote, 'promiseChain')
   const promise = navigator.init(browser)
@@ -22,13 +27,14 @@ const worker = (
 }
 
 const browsersIteratorGenerator = (
-  { remote },
+  { remote, isLocal },
   queue,
   testCallback
 ) => (browser) => {
   const task = {
     browser,
     remote,
+    isLocal,
   }
   queue.push(task, testCallback)
 }
