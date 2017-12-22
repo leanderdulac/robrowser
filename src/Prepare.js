@@ -70,6 +70,11 @@ const prepare = (configs, run = runner) => {
 
 export {
   prepare,
+  isLocal,
+  applyIsLocal,
+  loadTestsFiles,
+  loadTest,
+  loadFile,
+  stringToFunction,
+  getFilePath,
 }
-
-export default prepare
