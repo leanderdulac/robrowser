@@ -11,7 +11,7 @@
       "os_version": "7",
       "browserName": "chrome",
       "browser_version": "55",
-      "url": "http://www.google.com",
+      "url": "http://localhost:3000",
       "test": "./index.js"
     }
   ],
