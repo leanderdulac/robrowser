@@ -6,15 +6,10 @@ const worker = (
   {
     browser,
     remote,
-    isLocal,
   },
   callback
 ) => {
   const { url, test } = browser
-
-  if (isLocal) {
-    browser['browserstack.local'] = 'true'
-  }
 
   const navigator = wd.remote(remote, 'promiseChain')
   const promise = navigator.init(browser)
@@ -27,32 +22,32 @@ const worker = (
 }
 
 const browsersIteratorGenerator = (
-  { remote, isLocal },
-  queue,
-  testCallback
+  {
+    remote,
+    isLocal,
+    endTestCallback,
+  },
+  queue
 ) => (browser) => {
   const task = {
     browser,
     remote,
     isLocal,
   }
-  queue.push(task, testCallback)
+  queue.push(task, endTestCallback)
 }
 
-const runner = (
-  config,
-  testCallback,
-  endCallback,
-  launchTest = worker,
-  browsersIterator = browsersIteratorGenerator
-) => {
-  const { browsers, concurrency } = config
-  const queue = async.queue(launchTest, concurrency)
-  queue.drain = endCallback
-  const iterator = browsersIterator(
+const runner = (config) => {
+  const {
+    browsers,
+    concurrency,
+    endAllTestsCallback,
+  } = config
+  const queue = async.queue(worker, concurrency)
+  queue.drain = endAllTestsCallback
+  const iterator = browsersIteratorGenerator(
     config,
-    queue,
-    testCallback
+    queue
   )
 
   async.forEach(browsers, iterator)
