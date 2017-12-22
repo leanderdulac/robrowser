@@ -1,1 +1,1 @@
-export { automated as default } from './automated'
+export { prepare as default } from './Prepare'
