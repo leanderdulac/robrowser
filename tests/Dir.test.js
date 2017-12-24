@@ -9,8 +9,8 @@ import {
   parsePath,
   createFolder,
   createFolders,
-  createPathSync,
-  deleteFolder,
+  createPath,
+  deletePath,
 } from './../src/helper/Dir'
 
 const folderPath = './tests/testfolder'
@@ -22,7 +22,7 @@ const folders = [
 
 test.afterEach(() => {
   if (existsSync(absFolderPath)) {
-    deleteFolder(absFolderPath)
+    deletePath(absFolderPath)
   }
 })
 
@@ -48,7 +48,7 @@ test('should create add folder', (t) => {
 })
 
 test('should create subfolder', (t) => {
-  createPathSync(`${absFolderPath}/test.png`)
+  createPath(`${absFolderPath}/test.png`)
 
   t.is(existsSync(absFolderPath), true)
 })
@@ -58,7 +58,7 @@ test('should remove folder with subfolder and files', (t) => {
   mkdirSync(`${absFolderPath}/testSubFolder`)
   writeFileSync(`${absFolderPath}/testSubFolder/test.txt`, 'Hey there!')
 
-  deleteFolder(`${absFolderPath}`)
+  deletePath(`${absFolderPath}`)
 
   t.is(existsSync(absFolderPath), false)
 })

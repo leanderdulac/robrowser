@@ -53,15 +53,24 @@ function endAllTests () {
 config.endTestCallback = endTest
 config.endAllTestsCallback = endAllTests
 
-if (config.isLocal) {
-  spinner.text = 'Up Browserstack local binary';
-  browserstackLocal.start({
-    key: config.remote.pwd,
-  }, function () {
-    spinner.text = getEndTestMessage(finishedTestsCount);
-    automated(config);
-  })
-} else {
-  spinner.text = getEndTestMessage(finishedTestsCount);
-  automated(config);
+if (config.screenshot.folder) {
+  var screenshotDir = path
+    .join(path.join(rootPath, config.screenshot.folder))
+
+  if (!fs.existsSync(screenshotDir)) {
+    mkdirSyncP(screenshotDir);
+  }
 }
+
+// if (config.isLocal) {
+//   spinner.text = 'Up Browserstack local binary';
+//   browserstackLocal.start({
+//     key: config.remote.pwd,
+//   }, function () {
+//     spinner.text = getEndTestMessage(finishedTestsCount);
+//     automated(config);
+//   })
+// } else {
+//   spinner.text = getEndTestMessage(finishedTestsCount);
+//   automated(config);
+// }

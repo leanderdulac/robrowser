@@ -12,6 +12,9 @@ const worker = (
   const { url, test } = browser
 
   const navigator = wd.remote(remote, 'promiseChain')
+
+  // wd.webdriver.prototype.saveScreenshot = 
+
   const promise = navigator.init(browser)
     .setAsyncScriptTimeout(30000)
     .get(url)

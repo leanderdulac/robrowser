@@ -42,7 +42,7 @@ const createFolders = absPath =>
     absPath
   )
 
-const createPathSync = (location) => {
+const createPath = (location) => {
   const parsedPath = parsePath(location)
   const absPath = prop('root', parsedPath)
   const folders = parsedPath.dir.split(sep)
@@ -55,11 +55,11 @@ const isDirectory = curPath => lstatSync(curPath).isDirectory()
 const deleteFileOrFolder = folderPath => file =>
   ifElse(
     isDirectory,
-    deleteFolder,
+    deletePath,
     unlinkSync
   )(`${folderPath}/${file}`)
 
-const deleteFolder = (path) => {
+const deletePath = (path) => {
   if (existsSync(path)) {
     const files = readdirSync(path)
     const deleteAll = deleteFileOrFolder(path)
@@ -73,8 +73,8 @@ export default {
   parsePath,
   createFolder,
   createFolders,
-  createPathSync,
+  createPath,
   isDirectory,
   deleteFileOrFolder,
-  deleteFolder,
+  deletePath,
 }

@@ -5,6 +5,9 @@
     "user": "***",
     "pwd": "***"
   },
+  "screenshot": {
+    "folder": "./screenshots"
+  },
   "browsers": [
     {
       "os": "windows",
