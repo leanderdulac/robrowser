@@ -14,7 +14,17 @@
       "os_version": "7",
       "browserName": "chrome",
       "browser_version": "55",
-      "url": "http://localhost:3000",
+      "resolution": "1920x1080",
+      "url": "http://google.com",
+      "test": "./index.js"
+    },
+    {
+      "os": "windows",
+      "os_version": "7",
+      "browserName": "firefox",
+      "browser_version": "38",
+      "resolution": "1920x1080",
+      "url": "http://google.com",
       "test": "./index.js"
     }
   ],

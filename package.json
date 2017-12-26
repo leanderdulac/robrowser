@@ -1,5 +1,5 @@
 {
-  "name": "browserstack-automated",
+  "name": "robrowser",
   "version": "1.0.0",
   "description": "Automating the use of Browser Stack.",
   "main": "./dist/index.js",
@@ -9,7 +9,9 @@
     "build:commonjs": "webpack",
     "start": "npm run build",
     "lint": "eslint src/**/*.js",
-    "test": "ava"
+    "test": "yarn test:unit && yarn test:e2e",
+    "test:unit": "ava",
+    "test:e2e": "yarn add ../robrowser --dev && robrowser"
   },
   "files": [
     "bin/",

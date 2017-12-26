@@ -1,10 +1,12 @@
-module.exports = (browser, callback) => {
+module.exports = (browser, next) => {
   browser
-    .waitForElementById('simple', 5000)
+    .maximize()
+    .waitForElementByName('q', 5000)
+    .elementByName('q')
+    .sendKeys('BrowserStack')
+    .elementByClassName('lsb')
     .click()
-    .saveScreenshot('teste.png')
-    .waitForElementById('pay', 5000)
-    .click()
-    .fin(callback)
+    .saveScreenshot('google_search.png')
+    .fin(next)
     .done()
 }
