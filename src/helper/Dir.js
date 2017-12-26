@@ -19,12 +19,16 @@ import {
   pipe,
   forEach,
   ifElse,
+  curry,
 } from 'ramda'
+import { rootPath } from 'get-root-path'
 
 const parsePath = pipe(
   normalize,
   parse
 )
+
+const joinRootPath = curry((path, dir) => join(path, dir))(rootPath)
 
 const createFolder = (absPath, folder) => {
   const newPath = join(absPath, folder)
@@ -77,4 +81,5 @@ export default {
   isDirectory,
   deleteFileOrFolder,
   deletePath,
+  joinRootPath,
 }

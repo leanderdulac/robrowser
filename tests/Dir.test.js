@@ -11,6 +11,7 @@ import {
   createFolders,
   createPath,
   deletePath,
+  joinRootPath,
 } from './../src/helper/Dir'
 
 const folderPath = './tests/testfolder'
@@ -61,4 +62,11 @@ test('should remove folder with subfolder and files', (t) => {
   deletePath(`${absFolderPath}`)
 
   t.is(existsSync(absFolderPath), false)
+})
+
+test('shound join root path', (t) => {
+  const path = './screenshot'
+
+  const newPath = joinRootPath(path)
+  t.is(newPath, `${rootPath}/screenshot`)
 })
