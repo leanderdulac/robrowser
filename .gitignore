@@ -3,6 +3,8 @@
 
 # Browserstack
 browserstack.err
+local.log
+/screenshots
 
 # Logs
 logs
