@@ -1,5 +1,3 @@
-/* eslint-disable */
-
 import { writeFile } from 'fs'
 import { join as joinPath } from 'path'
 import { rootPath } from 'get-root-path'
