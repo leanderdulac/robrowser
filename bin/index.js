@@ -45,9 +45,13 @@ function endTest () {
 
 function endAllTests () {
   if (browserstackLocal.isRunning()) {
-    browserstackLocal.stop()
+    spinner.text = 'Stop browserstack local binary';
+    browserstackLocal.stop(() => {
+      spinner.stop()
+    })
+  } else {
+    spinner.stop()
   }
-  spinner.stop()
 }
 
 config.endTestCallback = endTest
