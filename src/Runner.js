@@ -1,11 +1,16 @@
 /* eslint no-param-reassign: "warn" */
 import async from 'async'
 import wd from 'wd'
+import {
+  deleteScreenshotFolder,
+  makeScreenshot,
+} from './Screenshot'
 
 const worker = (
   {
     browser,
     remote,
+    screenshot,
   },
   callback
 ) => {
@@ -13,7 +18,17 @@ const worker = (
 
   const navigator = wd.remote(remote, 'promiseChain')
 
+<<<<<<< HEAD
   // wd.webdriver.prototype.saveScreenshot = 
+=======
+  navigator.saveScreenshot = makeScreenshot(
+    {
+      browser,
+      screenshot,
+    },
+    navigator
+  )
+>>>>>>> 4e479f6... screenshot: add screenshot method
 
   const promise = navigator.init(browser)
     .setAsyncScriptTimeout(30000)
@@ -26,14 +41,16 @@ const worker = (
 
 const browsersIteratorGenerator = (
   {
-    remote,
-    isLocal,
     endTestCallback,
+    isLocal,
+    remote,
+    screenshot,
   },
   queue
 ) => (browser) => {
   const task = {
     browser,
+    screenshot,
     remote,
     isLocal,
   }
@@ -44,6 +61,7 @@ const runner = (config) => {
   const {
     browsers,
     concurrency,
+    screenshot,
     endAllTestsCallback,
   } = config
   const queue = async.queue(worker, concurrency)
@@ -52,6 +70,8 @@ const runner = (config) => {
     config,
     queue
   )
+
+  deleteScreenshotFolder(screenshot)
 
   async.forEach(browsers, iterator)
 }
