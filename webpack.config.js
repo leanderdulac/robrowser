@@ -16,13 +16,23 @@ module.exports = {
       {
         enforce: 'pre',
         test: /\.js$/,
-        loader: 'eslint-loader',
-        exclude: /node_modules/,
+        use: [
+          {
+            options: {
+              eslintPath: require.resolve('eslint'),
+            },
+            loader: require.resolve('eslint-loader'),
+          },
+        ],
+        include: /src/,
       },
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        exclude: /node_modules/,
+        include: /src/,
+        options: {
+          cacheDirectory: true,
+        },
       },
     ],
   },

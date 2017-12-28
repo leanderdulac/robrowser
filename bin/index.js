@@ -23,7 +23,7 @@ function hasLocal (args) {
 var finishedTestsCount = 0
 var browserstackLocal = new browserstack.Local()
 var spinner = ora('Loading tests').start()
-var configsPath = path.join(rootPath, './.browserstack');
+var configsPath = path.join(rootPath, './.robrowser');
 var config = loadJSON(configsPath);
 var args = process.argv.slice(2);
 config.isLocal = hasLocal(args);

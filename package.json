@@ -5,12 +5,11 @@
   "main": "./dist/index.js",
   "bin": "./bin/index.js",
   "scripts": {
-    "build": "yarn build:commonjs",
-    "build:commonjs": "webpack",
+    "build": "webpack",
     "start": "npm run build",
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint './src/**/*.js'",
     "test": "yarn test:unit && yarn test:e2e",
-    "test:unit": "ava",
+    "test:unit": "ava --fail-fast -v",
     "test:e2e": "yarn add ../robrowser --dev && robrowser"
   },
   "files": [
@@ -56,14 +55,6 @@
     "node": ">=4.3.0 <5.0.0 || >=5.10"
   },
   "ava": {
-    "files": [
-      "tests/**/*.test.js"
-    ],
-    "source": [
-      "src/*.js"
-    ],
-    "failFast": true,
-    "failWithoutAssertions": false,
     "require": "babel-register",
     "babel": "inherit"
   }
