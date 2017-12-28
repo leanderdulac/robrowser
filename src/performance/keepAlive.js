@@ -30,7 +30,7 @@ const generateSecureAgent = () => new https.Agent({
 
 const generateHttpRequest = () => http.request
 const generateHttpsRequest = () => https.request
-const isHttps = propEq('protocal', 'https:')
+const isHttps = propEq('protocol', 'https:')
 const getAgent = ifElse(
   isHttps,
   generateAgent,

@@ -37,13 +37,5 @@
   },
   "engines": {
     "node": ">=6.12.2"
-  },
-  "ava": {
-    "files": [
-      "tests/**/*.test.js"
-    ],
-    "source": [
-      "src/*.js"
-    ]
   }
 }
