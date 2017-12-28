@@ -1,8 +1,8 @@
-import test from 'ava'
-import {
+const test = require('ava')
+const {
   spy,
-} from 'sinon'
-import {
+} = require('sinon')
+const {
   prepare,
   isLocal,
   applyIsLocal,
@@ -11,7 +11,7 @@ import {
   loadFile,
   stringToFunction,
   getFilePath,
-} from './../src/Prepare'
+} = require('./../src/prepare.js')
 
 const browser = {
   test: './tests/function.js',

@@ -1,1 +1,3 @@
-export { prepare as default } from './Prepare'
+const prepare = require('./prepare')
+
+module.exports = prepare

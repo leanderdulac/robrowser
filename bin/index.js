@@ -1,51 +1,51 @@
 #!/usr/bin/env node
-/* eslint-disable */
-var path = require('path');
-var fs = require('fs');
-var { rootPath } = require('get-root-path');
-var automated = require('./../dist/index.js');
-var browserstack = require('browserstack-local');
-var ora = require('ora');
 
-function loadJSON (filePath) {
-  var data = fs.readFileSync(filePath);
-  return JSON.parse(data);
+const { join } = require('path')
+const { readFileSync } = require('fs')
+const { rootPath } = require('get-root-path')
+const {
+  isEmpty,
+  length,
+  add,
+} = require('ramda')
+const automated = require('./../src/index.js')
+const browserstack = require('browserstack-local')
+const ora = require('ora')
+
+const loadJSON = (filePath) => {
+  const file = readFileSync(filePath)
+  return JSON.parse(file)
 }
 
-function hasLocal (args) {
-  const local = args.find(function (argument) {
-    return argument === '--local';
-  });
+const hasLocal = (args) => {
+  const local = args.find(argument => (argument === '--local'))
 
-  return local ? true : false;
+  return isEmpty(local)
 }
 
-var finishedTestsCount = 0
-var browserstackLocal = new browserstack.Local()
-var spinner = ora('Loading tests').start()
-var configsPath = path.join(rootPath, './.robrowser');
-var config = loadJSON(configsPath);
-var args = process.argv.slice(2);
-config.isLocal = hasLocal(args);
-var countTests = config.browsers.length
-spinner.text = getEndTestMessage(finishedTestsCount);
+const plus1 = add(1)
 
-function getEndTestMessage(finishedTests) {
-  return 'Completed '
-    + finishedTests
-    + ' of '
-    + countTests
-    + ' with concurrency '
-    + config.concurrency;
+let finishedTestsCount = 0
+const browserstackLocal = new browserstack.Local()
+const spinner = ora('Loading tests').start()
+const configsPath = join(rootPath, './.browserstack')
+const config = loadJSON(configsPath)
+const { concurrency, browsers } = config
+const args = process.argv.slice(2)
+config.isLocal = hasLocal(args)
+const countTests = length(browsers)
+const getEndTestMessage = finishedTests =>
+  `Completed ${finishedTests} of ${countTests} with currency ${concurrency}`
+spinner.text = getEndTestMessage(finishedTestsCount)
+
+const endTest = () => {
+  finishedTestsCount = plus1(finishedTestsCount)
+  spinner.text = getEndTestMessage(finishedTestsCount)
 }
 
-function endTest () {
-  spinner.text = getEndTestMessage(++finishedTestsCount);
-}
-
-function endAllTests () {
+const endAllTests = () => {
   if (browserstackLocal.isRunning()) {
-    spinner.text = 'Stop browserstack local binary';
+    spinner.text = 'Stop browserstack local binary'
     browserstackLocal.stop(() => {
       spinner.stop()
     })
@@ -58,14 +58,14 @@ config.endTestCallback = endTest
 config.endAllTestsCallback = endAllTests
 
 if (config.isLocal) {
-  spinner.text = 'Up Browserstack local binary';
+  spinner.text = 'Up Browserstack local binary'
   browserstackLocal.start({
     key: config.remote.pwd,
-  }, function () {
-    spinner.text = getEndTestMessage(finishedTestsCount);
-    automated(config);
+  }, () => {
+    spinner.text = getEndTestMessage(finishedTestsCount)
+    automated(config)
   })
 } else {
-  spinner.text = getEndTestMessage(finishedTestsCount);
-  automated(config);
+  spinner.text = getEndTestMessage(finishedTestsCount)
+  automated(config)
 }

@@ -1,19 +1,21 @@
-import { writeFile } from 'fs'
-import { join as joinPath } from 'path'
-import { rootPath } from 'get-root-path'
-import {
+const { writeFile } = require('fs')
+const path = require('path')
+const { rootPath } = require('get-root-path')
+const {
   pipe,
   prop,
   props,
   join,
   reduce,
   defaultTo,
-} from 'ramda'
-import {
+} = require('ramda')
+const {
   createPath,
   deletePath,
   joinRootPath,
-} from './helper/Dir'
+} = require('./helper/dir')
+
+const joinPath = path.join
 
 const createFolderPath = pipe(
   props([
@@ -73,7 +75,7 @@ const makeScreenshot = (
     })
 }
 
-export {
+module.exports = {
   makeScreenshot,
   createFolderPath,
   getScreenshotFolder,
