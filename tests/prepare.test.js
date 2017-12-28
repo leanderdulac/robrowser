@@ -43,7 +43,7 @@ test('should return a function', (t) => {
 test('should load a file', (t) => {
   const stringFile = loadFile(browser)
 
-  t.is(stringFile, 'module.exports = () => 1')
+  t.is(stringFile, 'module.exports = () => 1\n')
 })
 
 test('should convert test path in function', (t) => {

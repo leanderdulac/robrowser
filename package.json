@@ -2,8 +2,7 @@
   "name": "robrowser",
   "version": "1.0.0",
   "description": "Automating the use of Browser Stack.",
-  "main": "./dist/index.js",
-  "bin": "./bin/index.js",
+  "main": "./index.js",
   "scripts": {
     "lint": "eslint ./**/*.js",
     "test": "ava --fail-fast -v"
