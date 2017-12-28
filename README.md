@@ -9,54 +9,6 @@ It started as a automation for [Browser Stack](https://www.browserstack.com) and
 
 ## Usage
 
-Robrowser will look for a `.robrowser` config file in the folder you're executing it to check for your credentials (currently we just support Browser Stack).
-
-Some `.robrowser` configuration parameters.
-
-| Attribute | Type | Description |
-| ---- | ---- | ---- |
-| `remote` | *object* | Configure the connection and access credentials.
-| `screenshot` | *object* | Configuration related to screenshot.
-| `browsers` | *array* | List counting the tests that will be performed, let's call it browser.
-| `concurrency` | *number* | Number of tests running in parallel.
-
-the `currency` parameter is very important, the hubs have a limited number of parallel tests, if you work as a team this will help you to run your tests without problems.
-
-A little more about the `remote` attribute.
-
-| Attribute | Type | Description |
-| ---- | ---- | ---- |
-| `host` | *string* | Host dos testes, ex: `hub.browserstack.com`.
-| `port` | *number* | Port you want to use for tests, defaut is 80.
-| `user` | *string* | If you are using a hub, here is your user.
-| `pwd` | *string* | If you are using a hub, here is your password.
-
-A little more about the `screenshot` attribute.
-
-| Attribute | Type | Description |
-| ---- | ---- | ---- |
-| `folder` | *string* | Define the directory where the screenshots will be saved. Default is `./screenshots`
-
-A little more about the `browser`, each browser represents a test, for each test you set capabilities of respective browser you want to test.
-
-| Attribute | Type | Description |
-| ---- | ---- | ---- |
-| `os` | *string* | OS you want to test.
-| `os_version` | *string* | OS version you want to test.
-| `browserName` | *string* | Browser you want to test.
-| `browser_version` | *string* | Browser version you want to test.
-| `resolution` | *string* | Set the resolution of VM before beginning of your test.
-| `url` | *string* | Url of the page you want to test.
-| `test` | *string* | Path of test.
-
-How to create a test?
-
-The test is nothing more than a function that will receive your browser, and a callback for the next test, [example test file](./index.js).
-
-With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
-
-Check our [example config file](./.robrowser) to see other available keys.
-
 **Disclaimer: this project isn't available on `npm` yet, check the Local usage section for now**
 
 ### Global installation
@@ -92,11 +44,57 @@ Run it
 robrowser
 ```
 
-## Contributing
+## Configuration
 
-Check our [Contributing](./.github/CONTRIBUTING.md) and [Code of conduct](./.github/CODE_OF_CONDUCT.md) files so you can join us in this awesome project!
+Robrowser will look for a `.robrowser` config file in the folder you're executing it to check for your credentials (currently we just support Browser Stack).
 
-_Spoiler alert_: We LOVE contributions, open Pull Requests and Issues and we will be eternally grateful for you!
+Some of `.robrowser` configuration parameters.
+
+| Attribute | Type | Description |
+| ---- | ---- | ---- |
+| `remote` | *object* | Configure the connection and access credentials.
+| `screenshot` | *object* | Configuration related to screenshot.
+| `browsers` | *array* | List counting the tests that will be performed, let's call it browser.
+| `concurrency` | *number* | Number of tests running in parallel.
+
+the `currency` parameter is very important, the hubs have a limited number of parallel tests, if you work as a team this will help you to run your tests without problems.
+
+### The `remote` attribute.
+
+| Attribute | Type | Description |
+| ---- | ---- | ---- |
+| `host` | *string* | Host dos testes, ex: `hub.browserstack.com`.
+| `port` | *number* | Port you want to use for tests, defaut is 80.
+| `user` | *string* | If you are using a hub, here is your user.
+| `pwd` | *string* | If you are using a hub, here is your password.
+
+### The `screenshot` attribute.
+
+| Attribute | Type | Description |
+| ---- | ---- | ---- |
+| `folder` | *string* | Define the directory where the screenshots will be saved. Default is `./screenshots`
+
+### The `browser` parameter
+
+> Each browser represents a test, for each test you can set capabilities of each respective browser you want to test.
+
+| Attribute | Type | Description |
+| ---- | ---- | ---- |
+| `os` | *string* | OS you want to test.
+| `os_version` | *string* | OS version you want to test.
+| `browserName` | *string* | Browser you want to test.
+| `browser_version` | *string* | Browser version you want to test.
+| `resolution` | *string* | Set the resolution of VM before beginning of your test.
+| `url` | *string* | Url of the page you want to test.
+| `test` | *string* | Path of test.
+
+Check our [example config file](./.robrowser) to see all available keys.
+
+## What is a _test_?
+
+Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./index.js).
+
+With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
 
 ## Testing and linting
 
@@ -115,6 +113,12 @@ yarn lint
 # or
 npm run lint
 ```
+
+## Contributing
+
+Check our [Contributing](./.github/CONTRIBUTING.md) and [Code of conduct](./.github/CODE_OF_CONDUCT.md) files so you can join us in this awesome project!
+
+_Spoiler alert_: We LOVE contributions, open Pull Requests and Issues and we will be eternally grateful for you!
 
 ## License
 
