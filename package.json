@@ -6,9 +6,7 @@
   "bin": "./bin/index.js",
   "scripts": {
     "lint": "eslint ./**/*.js",
-    "test": "yarn test:unit && yarn test:e2e",
-    "test:unit": "ava --fail-fast -v",
-    "test:e2e": "yarn add ../robrowser --dev && robrowser"
+    "test": "ava --fail-fast -v"
   },
   "files": [
     "src/"

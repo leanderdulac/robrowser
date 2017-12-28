@@ -11,5 +11,4 @@ cache:
 script:
   - yarn
   - yarn lint
-  - yarn test:unit
-  - yarn build
+  - yarn test
