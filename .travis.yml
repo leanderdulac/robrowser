@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - '8'
+  - '6'
 
 cache:
   yarn: true
@@ -11,5 +11,4 @@ cache:
 script:
   - yarn
   - yarn lint
-  - yarn test:unit
-  - yarn build
+  - yarn test

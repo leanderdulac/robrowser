@@ -1,10 +1,10 @@
 /* eslint no-param-reassign: "warn" */
-import async from 'async'
-import wd from 'wd'
-import {
+const async = require('async')
+const wd = require('wd')
+const {
   deleteScreenshotFolder,
   makeScreenshot,
-} from './Screenshot'
+} = require('./screenshot')
 
 const worker = (
   {
@@ -72,9 +72,8 @@ const runner = (config) => {
   async.forEach(browsers, iterator)
 }
 
-export {
+module.exports = {
   worker,
   browsersIteratorGenerator,
+  runner,
 }
-
-export default runner

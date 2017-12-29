@@ -1,27 +1,27 @@
 /* eslint no-use-before-define: "warn" */
-import {
+const {
   normalize,
   parse,
   sep,
   join,
-} from 'path'
-import {
+} = require('path')
+const {
   existsSync,
   mkdirSync,
   readdirSync,
   rmdirSync,
   lstatSync,
   unlinkSync,
-} from 'fs'
-import {
+} = require('fs')
+const {
   reduce,
   prop,
   pipe,
   forEach,
   ifElse,
   curry,
-} from 'ramda'
-import { rootPath } from 'get-root-path'
+} = require('ramda')
+const { rootPath } = require('get-root-path')
 
 const parsePath = pipe(
   normalize,
@@ -73,7 +73,7 @@ const deletePath = (path) => {
   }
 }
 
-export default {
+module.exports = {
   parsePath,
   createFolder,
   createFolders,

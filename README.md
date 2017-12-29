@@ -21,7 +21,7 @@ yarn global add robrowser
 
 ### One-time usage with npx
 
-If you have `npm@5.2.0` installed you can use [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) to execute commands without needing to install a global package if you don't want to.
+If you have `npm@>5.2.0` installed you can use [npx](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b) to execute commands without needing to install a global package if you don't want to.
 
 To do so just run
 
@@ -88,11 +88,11 @@ the `currency` parameter is very important, the hubs have a limited number of pa
 | `url` | *string* | Url of the page you want to test.
 | `test` | *string* | Path of test.
 
-Check our [example config file](./.robrowser) to see all available keys.
+Check our [example config file](./examples/.robrowser) to see all available keys.
 
 ## What is a _test_?
 
-Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./index.js).
+Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./examples/index.js).
 
 With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
 

@@ -1,18 +1,18 @@
-import test from 'ava'
-import { rootPath } from 'get-root-path'
-import {
+const test = require('ava')
+const { rootPath } = require('get-root-path')
+const {
   existsSync,
   mkdirSync,
   writeFileSync,
-} from 'fs'
-import {
+} = require('fs')
+const {
   parsePath,
   createFolder,
   createFolders,
   createPath,
   deletePath,
   joinRootPath,
-} from './../src/helper/Dir'
+} = require('./../src/helper/dir')
 
 const folderPath = './tests/testfolder'
 const absFolderPath = `${rootPath}/tests/testfolder`

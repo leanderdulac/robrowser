@@ -1,6 +1,6 @@
 /* eslint no-eval: "warn" */
 /* eslint no-plusplus: "warn" */
-import {
+const {
   map,
   merge,
   prop,
@@ -10,12 +10,12 @@ import {
   ifElse,
   has,
   always,
-} from 'ramda'
-import path from 'path'
-import { readFileSync } from 'fs'
-import { rootPath } from 'get-root-path'
-import './performance/KeepAlive'
-import runner from './Runner'
+} = require('ramda')
+const path = require('path')
+const { readFileSync } = require('fs')
+const { joinRootPath } = require('./helper/dir')
+require('./performance/keepAlive')
+const { runner } = require('./runner')
 
 const getFilePath =
   absolutePath =>
@@ -24,7 +24,7 @@ const getFilePath =
 
 const loadFile = pipe(
   prop('test'),
-  getFilePath(rootPath),
+  joinRootPath,
   readFileSync,
   toString
 )
@@ -68,7 +68,7 @@ const prepare = (configs, run = runner) => {
   run(configsWithLoadedTests)
 }
 
-export {
+module.exports = {
   prepare,
   isLocal,
   applyIsLocal,

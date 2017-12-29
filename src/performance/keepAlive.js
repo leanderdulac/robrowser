@@ -6,15 +6,15 @@
 * test in the browserstack and other hubs. Prevents selenium
 * from creating multiple connections per test.
 */
-import {
+const {
   set,
   lensProp,
   ifElse,
   propEq,
   and,
-} from 'ramda'
-import http from 'http'
-import https from 'https'
+} = require('ramda')
+const http = require('http')
+const https = require('https')
 
 const keepAliveTimeout = 30 * 1000
 
@@ -30,7 +30,7 @@ const generateSecureAgent = () => new https.Agent({
 
 const generateHttpRequest = () => http.request
 const generateHttpsRequest = () => https.request
-const isHttps = propEq('protocal', 'https:')
+const isHttps = propEq('protocol', 'https:')
 const getAgent = ifElse(
   isHttps,
   generateAgent,

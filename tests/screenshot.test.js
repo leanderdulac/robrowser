@@ -1,17 +1,17 @@
-import test from 'ava'
-import { rootPath } from 'get-root-path'
-import { join } from 'path'
-import {
+const test = require('ava')
+const { rootPath } = require('get-root-path')
+const { join } = require('path')
+const {
   existsSync,
   mkdirSync,
   writeFileSync,
-} from 'fs'
-import {
+} = require('fs')
+const {
   createFolderPath,
   joinPaths,
   getScreenshotFolder,
   deleteScreenshotFolder,
-} from '../src/Screenshot'
+} = require('../src/screenshot')
 
 const browser = {
   os: 'windows',
