@@ -3,9 +3,17 @@
 
 Robrowser is a bot to help you test your project in many different browsers and operating systems.
 
-It started as a automation for [Browser Stack](https://www.browserstack.com) and its goal is to help you validate how your project look in many different environments by taking screenshots for you.
+## Support
 
-[Saucelabs](https://saucelabs.com/) is also currently accepted and if you would like to see other cross-browser tester running open an issue or a pull-request so we can check it!
+The currently supported tests are:
+
+- [Browser Stack](https://www.browserstack.com)
+
+The next hubs we intend to support are:
+
+- [Saucelabs](https://saucelabs.com/)
+
+If you want some other hub just create an [issue](https://github.com/pagarme/robrowser/issues)!
 
 ## Usage
 
@@ -31,17 +39,19 @@ npx robrowser
 
 ### Local usage
 
-Clone this project
+Using `yarn` or `npm`
 
 ```sh
-git clone git clone git@github.com:pagarme/robrowser.git
+yarn add https://github.com/pagarme/robrowser.git
 ```
 
-Go to the project where you want to run Robrowser and run the npm/yarn install commands passing the path to your local Robrowser version.
+Add in your `package.json`
 
 Run it
 ```sh
-robrowser
+"scripts": {
+  "robrowser": "./node_modules/robrowser/index.js start"
+}
 ```
 
 ## Configuration
@@ -87,6 +97,7 @@ the `currency` parameter is very important, the hubs have a limited number of pa
 | `resolution` | *string* | Set the resolution of VM before beginning of your test.
 | `url` | *string* | Url of the page you want to test.
 | `test` | *string* | Path of test.
+| `local` | *boolean* | Access a url from your local network.
 
 Check our [example config file](./examples/.robrowser) to see all available keys.
 
