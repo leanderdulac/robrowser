@@ -3,17 +3,21 @@
 const { join } = require('path')
 const { readFileSync } = require('fs')
 const { rootPath } = require('get-root-path')
+const browserstack = require('browserstack-local')
 const {
   length,
   inc,
+  find,
+  propEq,
 } = require('ramda')
 
 const meow = require('meow')
 const updateNotifier = require('update-notifier')
+const ora = require('ora')
 
 const { prepare: automated } = require('./src/index.js')
 
-const ora = require('ora')
+const browserstackLocal = new browserstack.Local()
 
 const loadJSON = (filePath) => {
   const file = readFileSync(filePath)
@@ -22,19 +26,42 @@ const loadJSON = (filePath) => {
 
 let finishedTestsCount = 0
 
-const spinner = ora('Initating tests\n').start()
+const spinner = ora('Initating tests').start()
 
-const getEndTestMessage = (finishedTests, total, finalConcurrency) =>
+const getStatusMessage = (finishedTests, total, finalConcurrency) =>
   `Completed ${finishedTests} of ${total} with concurrency ${finalConcurrency}`
 
-const endTest = (total, finalConcurrency) => {
+const callStatus = (total, finalConcurrency) => {
   finishedTestsCount = inc(finishedTestsCount)
-  spinner.text = getEndTestMessage(finishedTestsCount, total, finalConcurrency)
+  spinner.text = getStatusMessage(finishedTestsCount, total, finalConcurrency)
 }
 
 const endAllTests = () => {
   spinner.stop()
 }
+
+const stopingBrowserstackLocal = () => {
+  spinner.text = 'Stop browserstack tunnel'
+  browserstackLocal.stop(endAllTests)
+}
+
+const hasLocal = find(propEq('local', true))
+
+const startBinaryAndRun = initialStatusMessage => (config) => {
+  spinner.text = 'Up Browserstack tunnel'
+  browserstackLocal.start({
+    key: config.remote.pwd,
+  }, () => {
+    spinner.text = initialStatusMessage
+    automated(config)
+  })
+}
+
+const getEndAllTestsCallback = isLocal => (
+  isLocal ?
+    stopingBrowserstackLocal :
+    endAllTests
+)
 
 const cli = meow(
   `
@@ -75,13 +102,23 @@ const run = () => {
   const config = loadJSON(configsPath)
 
   const { concurrency = 1, browsers } = config
+
+  const isLocal = hasLocal(browsers)
   const countTests = length(browsers)
 
-  config.endTestCallback = endTest.bind(null, countTests, concurrency)
-  config.endAllTestsCallback = endAllTests
+  config.endTestCallback = callStatus.bind(null, countTests, concurrency)
+  config.endAllTestsCallback = getEndAllTestsCallback(isLocal)
 
-  spinner.text = getEndTestMessage(finishedTestsCount, countTests, concurrency)
-  automated(config)
+  const statusMessage = getStatusMessage(
+    finishedTestsCount,
+    countTests,
+    concurrency
+  )
+
+  const init = isLocal ? startBinaryAndRun(statusMessage) : automated
+
+  spinner.text = statusMessage
+  init(config)
 }
 
 updateNotifier({ pkg: cli.pkg }).notify()

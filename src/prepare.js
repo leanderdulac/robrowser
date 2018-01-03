@@ -1,10 +1,13 @@
 /* eslint-disable global-require, import/no-dynamic-require */
 const {
+  ifElse,
   map,
   merge,
-  prop,
-  pipe,
   objOf,
+  pipe,
+  prop,
+  propEq,
+  identity,
 } = require('ramda')
 const path = require('path')
 
@@ -30,14 +33,23 @@ const loadTest = browser => pipe(
   merge(browser)
 )(browser)
 
-const loadTestsFiles = pipe(
+const addLocalParam = ifElse(
+  propEq('local', true),
+  merge({ 'browserstack.local': true }),
+  identity
+)
+
+const prepareBrowsers = pipe(
   prop('browsers'),
-  map(loadTest),
+  map(pipe(
+    loadTest,
+    addLocalParam
+  )),
   objOf('browsers')
 )
 
 const prepare = (configs, run = runner) => {
-  const tests = loadTestsFiles(configs)
+  const tests = prepareBrowsers(configs)
 
   const configsWithLoadedTests = merge(configs, tests)
   run(configsWithLoadedTests)
@@ -45,8 +57,9 @@ const prepare = (configs, run = runner) => {
 
 module.exports = {
   prepare,
-  loadTestsFiles,
+  prepareBrowsers,
   loadTest,
   loadFile,
   getFilePath,
+  addLocalParam,
 }

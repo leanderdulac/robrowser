@@ -4,14 +4,20 @@ const {
 } = require('sinon')
 const {
   prepare,
-  loadTestsFiles,
+  prepareBrowsers,
   loadTest,
   loadFile,
   getFilePath,
+  addLocalParam,
 } = require('./../src/prepare.js')
 
 const browser = {
   test: './tests/function.js',
+}
+
+const browserLocal = {
+  test: './tests/function.js',
+  local: true,
 }
 
 const browsers = [
@@ -43,8 +49,22 @@ test('should convert test path in function', (t) => {
   t.is(browserWithTest.test(), 1)
 })
 
+test('should add local param', (t) => {
+  const newBrowser = addLocalParam(browserLocal)
+
+  t.is(typeof newBrowser, 'object')
+  t.is(newBrowser['browserstack.local'], true)
+})
+
+test('should not add local param', (t) => {
+  const newBrowser = addLocalParam(browser)
+
+  t.is(typeof newBrowser, 'object')
+  t.is(newBrowser['browserstack.local'], undefined)
+})
+
 test('should convert all tests path in function', (t) => {
-  const browsersWithTests = loadTestsFiles({ browsers })
+  const browsersWithTests = prepareBrowsers({ browsers })
   const [test1, test2] = browsersWithTests.browsers
 
   t.is(typeof test1.test, 'function')

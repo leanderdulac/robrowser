@@ -16,7 +16,8 @@
       "browser_version": "55",
       "resolution": "1920x1080",
       "url": "http://google.com",
-      "test": "./examples/index.js"
+      "test": "./examples/index.js",
+      "local": true
     },
     {
       "os": "windows",
