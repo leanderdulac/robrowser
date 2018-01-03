@@ -56,7 +56,7 @@ const browsersIteratorGenerator = (
 const runner = (config) => {
   const {
     browsers,
-    concurrency,
+    concurrency = 1,
     screenshot,
     endAllTestsCallback,
   } = config
