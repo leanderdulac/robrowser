@@ -2,12 +2,14 @@ const { writeFile } = require('fs')
 const path = require('path')
 const { rootPath } = require('get-root-path')
 const {
+  always,
+  defaultTo,
+  ifElse,
+  join,
   pipe,
   prop,
   props,
-  join,
   reduce,
-  defaultTo,
 } = require('ramda')
 const {
   createPath,
@@ -17,7 +19,7 @@ const {
 
 const joinPath = path.join
 
-const createFolderPath = pipe(
+const createFolderPathFromDesktop = pipe(
   props([
     'os',
     'os_version',
@@ -25,6 +27,21 @@ const createFolderPath = pipe(
     'browser_version',
   ]),
   join('/')
+)
+
+const createFolderPathFromMobile = pipe(
+  props([
+    'browserName',
+    'device',
+    'os_version',
+  ]),
+  join('/')
+)
+
+const getPathGenerator = ifElse(
+  prop('device'),
+  always(createFolderPathFromMobile),
+  always(createFolderPathFromDesktop)
 )
 
 const joinPaths = reduce(
@@ -50,7 +67,8 @@ const makeScreenshot = (
   },
   navigator
 ) => (fileName) => {
-  const folderPath = createFolderPath(browser)
+  const generatorPath = getPathGenerator(browser)
+  const folderPath = generatorPath(browser)
   const screenshotFolder = getScreenshotFolder(screenshot)
   const absPath = joinPaths([
     rootPath,
@@ -77,7 +95,9 @@ const makeScreenshot = (
 
 module.exports = {
   makeScreenshot,
-  createFolderPath,
+  getPathGenerator,
+  createFolderPathFromDesktop,
+  createFolderPathFromMobile,
   getScreenshotFolder,
   joinPaths,
   deleteScreenshotFolder,
