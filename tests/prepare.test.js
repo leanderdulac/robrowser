@@ -4,12 +4,9 @@ const {
 } = require('sinon')
 const {
   prepare,
-  isLocal,
-  applyIsLocal,
   loadTestsFiles,
   loadTest,
   loadFile,
-  stringToFunction,
   getFilePath,
 } = require('./../src/prepare.js')
 
@@ -33,17 +30,10 @@ test('should return path', (t) => {
   t.is(path, 'test1/test2')
 })
 
-test('should return a function', (t) => {
-  const funcString = 'module.esports = function () {}'
-  const func = stringToFunction(funcString)
-
-  t.is(typeof func, 'function')
-})
-
 test('should load a file', (t) => {
   const stringFile = loadFile(browser)
 
-  t.is(stringFile, 'module.exports = () => 1\n')
+  t.is(typeof stringFile, 'function')
 })
 
 test('should convert test path in function', (t) => {
@@ -61,23 +51,6 @@ test('should convert all tests path in function', (t) => {
   t.is(test1.test(), 1)
   t.is(typeof test2.test, 'function')
   t.is(test2.test(), 1)
-})
-
-test('should add param local each browser', (t) => {
-  const browsersWithTests = applyIsLocal(config)
-  const [test1] = browsersWithTests.browsers
-
-  t.is(test1['browserstack.local'], true)
-})
-
-test('should add local param and load test functions', (t) => {
-  const prepareTests = isLocal(config)
-  const browsersWithTests = prepareTests(config)
-  const [test1] = browsersWithTests.browsers
-
-  t.is(typeof test1.test, 'function')
-  t.is(test1.test(), 1)
-  t.is(test1['browserstack.local'], true)
 })
 
 test('should prepare configs', (t) => {

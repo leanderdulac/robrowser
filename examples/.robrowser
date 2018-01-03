@@ -2,8 +2,8 @@
   "remote": {
     "host": "hub.browserstack.com",
     "port": 80,
-    "user": "***",
-    "pwd": "***"
+    "user": "YOUR_USERNAME_HERE",
+    "pwd": "YOUR_ACCESS_KEY_HERE"
   },
   "screenshot": {
     "folder": "./screenshots"
@@ -16,7 +16,7 @@
       "browser_version": "55",
       "resolution": "1920x1080",
       "url": "http://google.com",
-      "test": "./index.js"
+      "test": "./examples/index.js"
     },
     {
       "os": "windows",
@@ -25,7 +25,7 @@
       "browser_version": "38",
       "resolution": "1920x1080",
       "url": "http://google.com",
-      "test": "./index.js"
+      "test": "./examples/index.js"
     }
   ],
   "concurrency": 2

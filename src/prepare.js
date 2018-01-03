@@ -1,20 +1,16 @@
-/* eslint no-eval: "warn" */
-/* eslint no-plusplus: "warn" */
+/* eslint-disable global-require, import/no-dynamic-require */
 const {
   map,
   merge,
   prop,
   pipe,
   objOf,
-  toString,
-  ifElse,
-  has,
-  always,
 } = require('ramda')
 const path = require('path')
-const { readFileSync } = require('fs')
-const { joinRootPath } = require('./helper/dir')
+
 require('./performance/keepAlive')
+
+const { joinRootPath } = require('./helper/dir')
 const { runner } = require('./runner')
 
 const getFilePath =
@@ -22,18 +18,14 @@ const getFilePath =
     testPath =>
       path.join(absolutePath, testPath)
 
-const loadFile = pipe(
-  prop('test'),
-  joinRootPath,
-  readFileSync,
-  toString
-)
+const loadFile = (browser) => {
+  const test = joinRootPath(prop('test', browser))
 
-const stringToFunction = string => eval(string)
+  return require(test)
+}
 
 const loadTest = browser => pipe(
   loadFile,
-  stringToFunction,
   objOf('test'),
   merge(browser)
 )(browser)
@@ -44,37 +36,17 @@ const loadTestsFiles = pipe(
   objOf('browsers')
 )
 
-const applyIsLocal = pipe(
-  prop('browsers'),
-  map(merge({
-    'browserstack.local': true,
-  })),
-  objOf('browsers')
-)
-
-const isLocal = ifElse(
-  has('isLocal'),
-  always(pipe(
-    loadTestsFiles,
-    applyIsLocal
-  )),
-  always(loadTestsFiles)
-)
-
 const prepare = (configs, run = runner) => {
-  const prepareTests = isLocal(configs)
-  const tests = prepareTests(configs)
+  const tests = loadTestsFiles(configs)
+
   const configsWithLoadedTests = merge(configs, tests)
   run(configsWithLoadedTests)
 }
 
 module.exports = {
   prepare,
-  isLocal,
-  applyIsLocal,
   loadTestsFiles,
   loadTest,
   loadFile,
-  stringToFunction,
   getFilePath,
 }
