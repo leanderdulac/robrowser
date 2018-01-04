@@ -1,12 +1,11 @@
-module.exports = (browser, next) => {
+module.exports = (browser, next, catchError) => {
   browser
     .waitForElementByName('q', 5000)
-    .elementByName('q')
     .sendKeys('BrowserStack')
     .waitForElementByName('btnG', 5000)
-    .elementByName('btnG')
     .click()
     .saveScreenshot('google_search.png')
+    .catch(catchError)
     .fin(next)
     .done()
 }
