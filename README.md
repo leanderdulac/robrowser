@@ -50,7 +50,7 @@ Add in your `package.json`
 Run it
 ```sh
 "scripts": {
-  "robrowser": "./node_modules/robrowser/index.js start"
+  "robrowser": "robrowser start"
 }
 ```
 

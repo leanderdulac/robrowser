@@ -15,7 +15,7 @@ const meow = require('meow')
 const updateNotifier = require('update-notifier')
 const ora = require('ora')
 
-const { prepare: automated } = require('./src/index.js')
+const { prepare: automated } = require('./../src/index.js')
 
 const browserstackLocal = new browserstack.Local()
 
