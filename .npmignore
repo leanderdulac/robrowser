@@ -1,0 +1,9 @@
+.editorconfig
+.eslintrc
+.github
+.tarvis.yml
+*.DS_Store
+*npm-debug.log
+*yarn-error.log
+screenshots/
+tests/
