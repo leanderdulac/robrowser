@@ -17,7 +17,29 @@ If you want some other hub just create an [issue](https://github.com/pagarme/rob
 
 ## Usage
 
-**Disclaimer: this project isn't available on `npm` yet, check the Local usage section for now**
+### Local usage
+
+Using `yarn` or `npm`
+
+```sh
+yarn add robrowser --dev
+```
+
+Add in your `package.json`
+
+Run it
+```sh
+"scripts": {
+  "robrowser": "robrowser start"
+}
+```
+
+Now just run the command
+```
+yarn robrowser
+```
+
+Remember, to run you need to configure the `.robrowser` file at the root of the project.
 
 ### Global installation
 
@@ -35,23 +57,6 @@ To do so just run
 
 ```sh
 npx robrowser
-```
-
-### Local usage
-
-Using `yarn` or `npm`
-
-```sh
-yarn add https://github.com/pagarme/robrowser.git
-```
-
-Add in your `package.json`
-
-Run it
-```sh
-"scripts": {
-  "robrowser": "robrowser start"
-}
 ```
 
 ## Configuration
@@ -103,7 +108,9 @@ Check our [example config file](./examples/.robrowser) to see all available keys
 
 ## What is a _test_?
 
-Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./examples/index.js).
+Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./examples/index.des.js).
+
+For more commands just look at this [documentation](https://github.com/admc/wd/blob/master/doc/api.md).
 
 With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
 

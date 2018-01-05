@@ -2,6 +2,7 @@ const test = require('ava')
 const {
   spy,
 } = require('sinon')
+const getMyLocalIp = require('my-local-ip')
 const {
   prepare,
   prepareBrowsers,
@@ -9,6 +10,9 @@ const {
   loadFile,
   getFilePath,
   addLocalParam,
+  replaceIpFromIos,
+  getPort,
+  getProtocol,
 } = require('./../src/prepare.js')
 
 const browser = {
@@ -81,4 +85,53 @@ test('should prepare configs', (t) => {
   t.is(typeof runnerParams, 'object')
   t.is(runnerParams.browsers.length, 2)
   t.is(runnerParams.isLocal, true)
+})
+
+test('should get port form url', (t) => {
+  const url = 'http://localhost:3000'
+
+  const port = getPort(url)
+
+  t.is(typeof port, 'string')
+  t.is(port, ':3000')
+})
+
+test('should get Protocol form url', (t) => {
+  const urlHttp = 'http://localhost:3000'
+  const urlHttps = 'https://localhost:3000'
+
+  const protocolHttp = getProtocol(urlHttp)
+  const protocolHttps = getProtocol(urlHttps)
+
+  t.is(typeof protocolHttp, 'string')
+  t.is(typeof protocolHttps, 'string')
+  t.is(protocolHttp, 'http')
+  t.is(protocolHttps, 'https')
+})
+
+test('should replace url to local ip', (t) => {
+  const localIosBrowser = {
+    browserName: 'iPhone',
+    url: 'http://localhost:3000',
+    local: true,
+  }
+
+  const localIp = getMyLocalIp()
+  const browserReplaced = replaceIpFromIos(localIosBrowser)
+
+  t.is(typeof browserReplaced, 'object')
+  t.is(browserReplaced.url, `http://${localIp}:3000`)
+})
+
+test('should not replace url', (t) => {
+  const localAndroidBrowser = {
+    browserName: 'android',
+    url: 'http://localhost:3000',
+    local: true,
+  }
+
+  const browserReplaced = replaceIpFromIos(localAndroidBrowser)
+
+  t.is(typeof browserReplaced, 'object')
+  t.is(browserReplaced.url, 'http://localhost:3000')
 })
