@@ -42,7 +42,7 @@ npx robrowser
 Using `yarn` or `npm`
 
 ```sh
-yarn add https://github.com/pagarme/robrowser.git
+yarn add robrowser --dev
 ```
 
 Add in your `package.json`
@@ -103,7 +103,7 @@ Check our [example config file](./examples/.robrowser) to see all available keys
 
 ## What is a _test_?
 
-Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./examples/index.js).
+Test are nothing more than functions that will receive a browser to run and a callback for the next test, [example test file](./examples/index.des.js).
 
 With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
 
