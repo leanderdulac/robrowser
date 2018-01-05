@@ -8,13 +8,18 @@ const {
   prop,
   propEq,
   identity,
+  allPass,
 } = require('ramda')
 const path = require('path')
-
+const getMyLocalIp = require('my-local-ip')
 require('./performance/keepAlive')
 
 const { joinRootPath } = require('./helper/dir')
 const { runner } = require('./runner')
+
+const isIos = propEq('browserName', 'iPhone')
+
+const isLocal = propEq('local', true)
 
 const getFilePath =
   absolutePath =>
@@ -34,8 +39,31 @@ const loadTest = browser => pipe(
 )(browser)
 
 const addLocalParam = ifElse(
-  propEq('local', true),
+  isLocal,
   merge({ 'browserstack.local': true }),
+  identity
+)
+
+const getPort = url => url.match(/:([0-9]+)/)[0] || ''
+const getProtocol = url => url.match(/^[^:]+(?=:\/\/)/)[0] || ''
+
+const replaceUrlFromLocalIp = (browser) => {
+  const { url } = browser
+  const localIp = getMyLocalIp()
+  const port = getPort(url)
+  const protocol = getProtocol(url)
+
+  return merge(browser, {
+    url: `${protocol}://${localIp}${port}`,
+  })
+}
+
+const replaceIpFromIos = ifElse(
+  allPass([
+    isLocal,
+    isIos,
+  ]),
+  replaceUrlFromLocalIp,
   identity
 )
 
@@ -43,7 +71,8 @@ const prepareBrowsers = pipe(
   prop('browsers'),
   map(pipe(
     loadTest,
-    addLocalParam
+    addLocalParam,
+    replaceIpFromIos
   )),
   objOf('browsers')
 )
@@ -62,4 +91,9 @@ module.exports = {
   loadFile,
   getFilePath,
   addLocalParam,
+  isIos,
+  getPort,
+  replaceIpFromIos,
+  replaceUrlFromLocalIp,
+  getProtocol,
 }
