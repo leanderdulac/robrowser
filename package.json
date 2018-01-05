@@ -1,6 +1,6 @@
 {
   "name": "robrowser",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Automating the use of Browser Stack.",
   "main": "src/index.js",
   "bin": "bin/index.js",
@@ -9,18 +9,19 @@
     "test": "ava --fail-fast -v"
   },
   "files": [
-    "src/"
+    "src/",
+    "bin/"
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/pagarme/browserstack-automated.git"
+    "url": "git+https://github.com/pagarme/robrowser.git"
   },
   "author": "Pagar.me Pagamentos S/A",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pagarme/browserstack-automated/issues"
+    "url": "https://github.com/pagarme/robrowser/issues"
   },
-  "homepage": "https://github.com/pagarme/browserstack-automated#readme",
+  "homepage": "https://github.com/pagarme/robrowser#readme",
   "devDependencies": {
     "ava": "0.24.0",
     "eslint": "4.14.0",
