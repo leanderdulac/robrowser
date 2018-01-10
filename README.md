@@ -80,7 +80,7 @@ the `currency` parameter is very important, the hubs have a limited number of pa
 | ---- | ---- | ---- |
 | `host` | *string* | Host dos testes, ex: `hub.browserstack.com`.
 | `port` | *number* | Port you want to use for tests, defaut is 80.
-| `user` | *string* | If you are using a hub, here is your user.
+| `user` | *string* | See [credentials](#credentials)
 | `pwd` | *string* | If you are using a hub, here is your password.
 
 ### The `screenshot` attribute.
@@ -113,6 +113,22 @@ Test are nothing more than functions that will receive a browser to run and a ca
 For more commands just look at this [documentation](https://github.com/admc/wd/blob/master/doc/api.md).
 
 With the config file having tests to be executed, Robrowser will run them for you and create a `./screenshot` folder with the results, this way you will be able to see if your frontend projects are rendering as expected.
+
+## Credentials
+
+Here is how you get your credentials to use in our config file.
+
+Don't forget not to commit them!
+
+### BrowserStack
+
+To get your BrowserStack credentials:
+
+- Log in
+- Go to https://www.browserstack.com/automate
+- On the left side of the screen click Username and Access Keys
+- Paste your Username in the `remote.user` key
+- Paste your Access Key in the `remote.pwd` key
 
 ## Testing and linting
 
