@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { join } = require('path')
-const { readFileSync } = require('fs')
+const { readFileSync, existsSync } = require('fs')
 const { rootPath } = require('get-root-path')
 const browserstack = require('browserstack-local')
 const {
@@ -98,8 +98,20 @@ const run = () => {
     robrowserConfigPath = './.robrowser'
   }
 
-  const configsPath = join(rootPath, robrowserConfigPath)
-  const config = loadJSON(configsPath)
+  const configFiles = [
+    {
+      file: join(rootPath, 'robrowser.config.js'),
+      fn: require,
+    },
+    {
+      file: join(rootPath, robrowserConfigPath),
+      fn: loadJSON,
+    },
+  ]
+
+  const { file, fn } = configFiles.find(item => existsSync(item.file))
+
+  const config = fn(file)
 
   const { concurrency = 1, browsers } = config
 
