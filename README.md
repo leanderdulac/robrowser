@@ -39,7 +39,7 @@ Now just run the command
 yarn robrowser
 ```
 
-Remember, to run you need to configure the `.robrowser` file at the root of the project.
+Remember, to run you need to configure the `robrowser.config.js` or `.robrowser` file at the root of the project.
 
 ### Global installation
 
@@ -61,9 +61,9 @@ npx robrowser
 
 ## Configuration
 
-Robrowser will look for a `.robrowser` config file in the folder you're executing it to check for your credentials (currently we just support Browser Stack).
+Robrowser will look for a `robrowser.config.js` or `.robrowser` config file in the folder you're executing it to check for your credentials (currently we just support Browser Stack).
 
-Some of `.robrowser` configuration parameters.
+Some of `robrowser.config.js` or `.robrowser` configuration parameters.
 
 | Attribute | Type | Description |
 | ---- | ---- | ---- |
@@ -104,7 +104,7 @@ the `currency` parameter is very important, the hubs have a limited number of pa
 | `test` | *string* | Path of test.
 | `local` | *boolean* | Access a url from your local network.
 
-Check our [example config file](./examples/.robrowser) to see all available keys.
+Check our [robrowser.config.js](./examples/robrowser.config.js) or [.robrowser](./examples/.robrowser) to see all available keys.
 
 ## What is a _test_?
 

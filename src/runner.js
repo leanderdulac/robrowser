@@ -51,21 +51,22 @@ const worker = (
 ) => {
   const { url, test } = browser
 
-  const navigator = wd.remote(remote, 'promiseChain')
+  const init = () => {
+    const navigator = wd.remote(remote, 'promiseChain')
 
-  navigator.saveScreenshot = makeScreenshot(
-    {
-      browser,
-      screenshot,
-    },
-    navigator
-  )
+    navigator.saveScreenshot = makeScreenshot(
+      {
+        browser,
+        screenshot,
+      },
+      navigator
+    )
 
-  const promise = navigator.init(browser)
-    .setAsyncScriptTimeout(30000)
-    .get(url)
+    return navigator.init(browser)
+      .setAsyncScriptTimeout(30000)
+      .get(url)
+  }
 
-  const finish = () => navigator.quit(callback)
   const catchError = (err) => {
     const generateConfig = getGeneratorConfig(browser)
     const testConfigs = generateConfig(browser)
@@ -73,7 +74,7 @@ const worker = (
     console.log(`${errorMessage}: [${testConfigs}]: ${err}`)
   }
 
-  test(promise, finish, catchError)
+  test(wd, init, callback, catchError)
 }
 
 const browsersIteratorGenerator = (
