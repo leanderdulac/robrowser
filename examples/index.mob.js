@@ -1,4 +1,6 @@
-module.exports = (browser, next, catchError) => {
+module.exports = (wd, init, next, catchError) => {
+  const browser = init()
+
   browser
     .waitForElementByName('q', 5000)
     .sendKeys('BrowserStack')
@@ -6,6 +8,6 @@ module.exports = (browser, next, catchError) => {
     .click()
     .saveScreenshot('google_search.png')
     .catch(catchError)
-    .fin(next)
+    .fin(() => browser.quit(next))
     .done()
 }
