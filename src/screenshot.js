@@ -19,7 +19,7 @@ const {
 
 const joinPath = path.join
 
-const createFolderPathFromDesktop = pipe(
+const createDesktopPaths = pipe(
   props([
     'os',
     'os_version',
@@ -29,7 +29,7 @@ const createFolderPathFromDesktop = pipe(
   join('/')
 )
 
-const createFolderPathFromMobile = pipe(
+const createMobilePaths = pipe(
   props([
     'browserName',
     'device',
@@ -38,10 +38,10 @@ const createFolderPathFromMobile = pipe(
   join('/')
 )
 
-const getPathGenerator = ifElse(
+const createPathsName = ifElse(
   prop('device'),
-  always(createFolderPathFromMobile),
-  always(createFolderPathFromDesktop)
+  always(createMobilePaths),
+  always(createDesktopPaths)
 )
 
 const joinPaths = reduce(
@@ -60,44 +60,43 @@ const deleteScreenshotFolder = pipe(
   deletePath
 )
 
-const makeScreenshot = (
-  {
-    browser,
-    screenshot,
-  },
-  navigator
-) => (fileName) => {
-  const generatorPath = getPathGenerator(browser)
-  const folderPath = generatorPath(browser)
+const makeScreenshot = (config, navigator, testName) => (fileName) => {
+  const { browser, screenshot } = config
+
+  const createPaths = createPathsName(browser)
+  const foldersPath = createPaths(browser)
   const screenshotFolder = getScreenshotFolder(screenshot)
+
   const absPath = joinPaths([
     rootPath,
     screenshotFolder,
-    folderPath,
+    testName,
+    foldersPath,
     fileName,
   ])
 
   createPath(absPath)
 
+  const createFile = data =>
+    writeFile(
+      absPath,
+      data.replace(/^data:image\/png;base64,/, ''),
+      'base64',
+      (err) => {
+        if (err) throw err
+      }
+    )
+
   return navigator
     .takeScreenshot()
-    .then((data) => {
-      writeFile(
-        absPath,
-        data.replace(/^data:image\/png;base64,/, ''),
-        'base64',
-        (err) => {
-          if (err) throw err
-        }
-      )
-    })
+    .then(createFile)
 }
 
 module.exports = {
   makeScreenshot,
-  getPathGenerator,
-  createFolderPathFromDesktop,
-  createFolderPathFromMobile,
+  createPathsName,
+  createDesktopPaths,
+  createMobilePaths,
   getScreenshotFolder,
   joinPaths,
   deleteScreenshotFolder,
