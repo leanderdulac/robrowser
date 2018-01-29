@@ -1,64 +1,28 @@
-/* eslint no-param-reassign: "warn" */
+/* eslint-disable no-console */
+/* eslint-disable camelcase */
+
 const async = require('async')
 const wd = require('wd')
-const {
-  ifElse,
-  props,
-  prop,
-  always,
-  join,
-  pipe,
-} = require('ramda')
-const {
-  deleteScreenshotFolder,
-  makeScreenshot,
-} = require('./screenshot')
+const chalk = require('chalk')
+const { deleteScreenshotFolder, makeScreenshot } = require('./screenshot')
 
-const generateFromDesktop = pipe(
-  props([
-    'os',
-    'os_version',
-    'browserName',
-    'browser_version',
-  ]),
-  join(' ')
-)
+function worker (config, callback) {
+  const { browser, remote, screenshot } = config
 
-const generateFromMobile = pipe(
-  props([
-    'browserName',
-    'device',
-    'os_version',
-  ]),
-  join(' ')
-)
-
-const getGeneratorConfig = ifElse(
-  prop('device'),
-  always(generateFromMobile),
-  always(generateFromDesktop)
-)
-
-const errorMessage = '\nAn error occurred in the test'
-
-const worker = (
-  {
-    browser,
-    remote,
-    screenshot,
-  },
-  callback
-) => {
-  const { url, test } = browser
+  const {
+    device,
+    os,
+    browserName,
+    browser_version,
+    url,
+    test,
+  } = browser
 
   const init = () => {
     const navigator = wd.remote(remote, 'promiseChain')
 
     navigator.saveScreenshot = makeScreenshot(
-      {
-        browser,
-        screenshot,
-      },
+      { browser, screenshot },
       navigator
     )
 
@@ -68,43 +32,54 @@ const worker = (
   }
 
   const catchError = (err) => {
-    const generateConfig = getGeneratorConfig(browser)
-    const testConfigs = generateConfig(browser)
+    const error = chalk.bold.red
+    const warn = chalk.bold.yellow
 
-    console.log(`${errorMessage}: [${testConfigs}]: ${err}`)
+    const errorOn = warn(`
+      ${device || os} - ${browserName} - ${browser_version}
+    `)
+
+    console.log('\n\n')
+    console.log(error('Error:'), errorOn)
+    console.log(error('Stack:'), err)
+    console.log('\n\n')
   }
 
   test(wd, init, callback, catchError)
 }
 
-const browsersIteratorGenerator = (
-  {
+function browserIterator (config, queue) {
+  const {
+    isLocal,
+    remote,
+    screenshot,
     endTestCallback,
-    isLocal,
-    remote,
-    screenshot,
-  },
-  queue
-) => (browser) => {
-  const task = {
-    browser,
-    screenshot,
-    remote,
-    isLocal,
+  } = config
+
+  return (browser) => {
+    const task = {
+      browser,
+      screenshot,
+      remote,
+      isLocal,
+    }
+
+    queue.push(task, endTestCallback)
   }
-  queue.push(task, endTestCallback)
 }
 
-const runner = (config) => {
+function runner (config) {
   const {
     browsers,
     concurrency = 1,
     screenshot,
     endAllTestsCallback,
   } = config
+
   const queue = async.queue(worker, concurrency)
   queue.drain = endAllTestsCallback
-  const iterator = browsersIteratorGenerator(
+
+  const iterator = browserIterator(
     config,
     queue
   )
@@ -115,7 +90,7 @@ const runner = (config) => {
 }
 
 module.exports = {
-  worker,
-  browsersIteratorGenerator,
   runner,
+  worker,
+  browserIterator,
 }
