@@ -7,11 +7,11 @@ const {
   writeFileSync,
 } = require('fs')
 const {
-  createFolderPathFromDesktop,
   joinPaths,
   getScreenshotFolder,
   deleteScreenshotFolder,
-  createFolderPathFromMobile,
+  createDesktopPaths,
+  createMobilePaths,
 } = require('../src/screenshot')
 
 const browser = {
@@ -32,13 +32,13 @@ const browserMobile = {
 }
 
 test('should create a folder path from desktop', (t) => {
-  const path = createFolderPathFromDesktop(browser)
+  const path = createDesktopPaths(browser)
 
   t.is(path, 'windows/7/chrome/55')
 })
 
 test('should create a folder path from mobile', (t) => {
-  const path = createFolderPathFromMobile(browserMobile)
+  const path = createMobilePaths(browserMobile)
 
   t.is(path, 'android/Google Nexus 9/5.1')
 })

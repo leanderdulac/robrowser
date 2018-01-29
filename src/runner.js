@@ -18,12 +18,13 @@ function worker (config, callback) {
     test,
   } = browser
 
-  const init = () => {
+  const init = (testName) => {
     const navigator = wd.remote(remote, 'promiseChain')
 
     navigator.saveScreenshot = makeScreenshot(
       { browser, screenshot },
-      navigator
+      navigator,
+      testName
     )
 
     return navigator.init(browser)

@@ -17,7 +17,7 @@ module.exports = (wd, init, next, catchError) => {
     }
   )
 
-  const browser = init()
+  const browser = init('desktop-test')
 
   browser
     .maximize()

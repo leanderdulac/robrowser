@@ -1,5 +1,5 @@
 module.exports = (wd, init, next, catchError) => {
-  const browser = init()
+  const browser = init('mobile-test')
 
   browser
     .waitForElementByName('q', 5000)
